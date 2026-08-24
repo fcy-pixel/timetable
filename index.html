@@ -41,7 +41,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 1-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
                 校園課節查詢
             </h1>
-            <p class="text-emerald-100 text-sm mt-1">快速查找 Day 1 - Day 6 課堂資訊</p>
+            <p class="text-emerald-100 text-sm mt-1">2026–2027 星期一至五課堂資訊</p>
         </div>
 
         <!-- Day Selector -->
@@ -49,9 +49,9 @@
             <div class="flex items-center gap-2 mb-2 text-emerald-800 font-semibold text-sm">
                 <!-- Calendar Icon -->
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
-                選擇循環週
+                選擇星期
             </div>
-            <div class="grid grid-cols-3 gap-2" id="day-buttons-container">
+            <div class="grid grid-cols-5 gap-1" id="day-buttons-container">
                 <!-- Day buttons will be injected here -->
             </div>
         </div>
@@ -86,7 +86,7 @@
                 </div>
 
                 <h3 id="class-view-title" class="text-lg font-bold text-gray-800 border-l-4 border-emerald-500 pl-3 mb-4">
-                    Day 1 - 1信班 課表
+                    星期一 - 1信班 課表
                 </h3>
                 <div id="class-schedule-list" class="space-y-3">
                     <!-- Schedule items injected by JS -->
@@ -113,7 +113,7 @@
                 </div>
 
                 <h3 id="teacher-view-title" class="text-lg font-bold text-gray-800 border-l-4 border-emerald-500 pl-3 mb-4">
-                    Day 1 - 老師 任教節數
+                    星期一 - 老師任教課節
                 </h3>
                 
                 <div id="teacher-schedule-list" class="space-y-3">
@@ -125,145 +125,28 @@
         
         <!-- Footer -->
         <div class="bg-gray-50 p-4 text-center text-xs text-gray-400 border-t border-gray-100">
-            資料來源：學校時間表 (Day 1 - Day 6)
+            <span id="data-source-label">資料來源：2026–2027 學校時間表</span>
+            <span class="block mt-1">圖書課：單周中圖、雙周英圖</span>
         </div>
     </div>
 
     <script>
         // --- Data ---
-        const scheduleData = {
-            "Day 1": {
-                "1信": ["英ST (琦)", "英ST (琦)", "中 (佳)", "中 (佳)", "人 (廖)", "數 (梅)", "音 (申)", "導 (梅)"],
-                "1望": ["中 (瑩)", "中 (瑩)", "數 (敏)", "科 (鄺)", "英ST (芷)", "英ST (芷)", "體 (耀)", "導 (芷)"],
-                "2信": ["數 (盧)", "技 (唐)", "英 (紀)", "體 (盧)", "中 (婷)", "中 (婷)", "常 (梅)", "音專 (申)"],
-                "2望": ["英 (美)", "常 (伍)", "中 (梁)", "中 (梁)", "常 (伍)", "數 (姚)", "技 (瑩)", "音專 (唐)"],
-                "3信": ["中 (曾)", "中 (潤)", "英ST (玲)", "英ST (玲)", "數 (申)", "聖 (浩)", "導 (浩)", "體專 (浩)"],
-                "3望": ["中 (潤)", "中 (潤)", "數 (華)", "音 (敏)", "英 (徐)", "常 (彥)", "導 (盧)", "體專 (耀)"],
-                "4信": ["英 (儀)", "英 (儀)", "中 (吳)", "中 (吳)", "科 (馮)", "科 (馮)", "數 (李)", "導 (紀)"],
-                "4望": ["英 (紀)", "英 (紀)", "中 (露)", "中 (露)", "數 (嚴)", "音 (美)", "視 (嚴)", "導 (儀)"],
-                "4愛": ["英 (慧)", "英 (慧)", "中 (潤)", "中 (潤)", "數 (浩)", "技 (航)", "人 (徐)", "導 (慧)"],
-                "4智": ["英 (玲)", "英 (玲)", "中 (曾)", "中 (曾)", "數 (佩)", "人 (華)", "圖 (唐)", "導 (瑩)"],
-                "5信": ["中 (婷)", "中 (婷)", "英 (芷)", "英 (芷)", "音 (兹)", "數 (佩)", "常 (華)", "視專 (敏)"],
-                "5望": ["中 (耀)", "中 (耀)", "英 (儀)", "英 (儀)", "常 (陳)", "體 (伍)", "數 (馮)", "視專 (驥)"],
-                "5愛": ["中 (陳)", "中 (陳)", "英 (彥)", "英 (彥)", "數 (敏)", "圖 (唐)", "常 (廖)", "視專 (航)"],
-                "5智": ["中 (鄺)", "中 (鄺)", "英 (琦)", "英 (琦)", "數 (燊)", "常 (申)", "聖 (驥)", "視專 (佳)"],
-                "6信": ["圖 (唐)", "常 (航)", "英 (徐)", "英 (徐)", "中 (露)", "中 (露)", "數 (伍)", "鞏固數 (伍)"],
-                "6望": ["視 (航)", "體 (浩)", "英 (驥)", "英 (驥)", "中 (佳)", "中 (佳)", "數 (兹)", "鞏固數 (兹)"],
-                "6愛": ["數 (姚)", "音 (美)", "英 (美)", "英 (美)", "中 (梁)", "中 (梁)", "體 (露)", "鞏固數 (姚)"],
-                "6智": ["技 (鄧)", "數 (盧)", "英 (慧)", "英 (慧)", "中 (鄧)", "中 (鄧)", "常 (燊)", "鞏固數 (盧)"]
-            },
-            "Day 2": {
-                "1信": ["中 (佳)", "中 (佳)", "科 (馮)", "科 (馮)", "英ST (琦)", "英ST (琦)", "數 (梅)", "音專 (兹)"],
-                "1望": ["中 (瑩)", "中 (瑩)", "英ST (芷)", "英ST (芷)", "音 (姚)", "數 (敏)", "人 (瑩)", "音專 (唐)"],
-                "2信": ["英ST (紀)", "英ST (紀)", "常 (梅)", "常 (梅)", "中 (婷)", "中 (婷)", "數 (盧)", "導 (梅)"],
-                "2望": ["英 (美)", "圖 (唐)", "體 (浩)", "數 (姚)", "中 (梁)", "中 (梁)", "常 (伍)", "導 (芷)"],
-                "3信": ["數 (申)", "英 (玲)", "中 (曾)", "中 (曾)", "常 (紀)", "常 (紀)", "圖 (唐)", "鞏固數 (申)"],
-                "3望": ["英 (徐)", "數 (華)", "中 (潤)", "中 (潤)", "常 (彥)", "常 (彥)", "普 (潤)", "鞏固數 (華)"],
-                "4信": ["中 (吳)", "中 (吳)", "英 (儀)", "普 (廖)", "人 (廖)", "數 (李)", "科 (馮)", "導 (佩)"],
-                "4望": ["中 (露)", "中 (露)", "英 (紀)", "人 (瑩)", "科 (鄧)", "數 (嚴)", "普 (吳)", "導 (美)"],
-                "4愛": ["中 (潤)", "中 (潤)", "英 (慧)", "數 (浩)", "人 (徐)", "人 (徐)", "視 (廖)", "導 (慧)"],
-                "4智": ["中 (曾)", "中 (曾)", "英 (玲)", "體 (伍)", "人 (華)", "人 (華)", "數 (佩)", "導 (鄧)"],
-                "5信": ["英 (芷)", "英 (芷)", "中 (婷)", "中 (婷)", "體 (露)", "數 (佩)", "普 (婷)", "體專 (露)"],
-                "5望": ["英 (儀)", "英 (儀)", "中 (耀)", "中 (耀)", "聖 (嚴)", "數 (馮)", "常 (陳)", "體專 (伍)"],
-                "5愛": ["英 (彥)", "英 (彥)", "中 (陳)", "中 (陳)", "數 (敏)", "聖 (浩)", "視 (敏)", "體專 (浩)"],
-                "5智": ["英 (琦)", "英 (琦)", "中 (鄺)", "中 (鄺)", "數 (燊)", "音 (申)", "普 (徐)", "體專 (耀)"],
-                "6信": ["數 (伍)", "數 (伍)", "中 (露)", "英 (徐)", "常 (航)", "常 (航)", "導 (耀)", "視專 (盧)"],
-                "6望": ["數 (兹)", "數 (兹)", "中 (佳)", "英 (驥)", "常 (兹)", "常 (兹)", "導 (浩)", "視專 (驥)"],
-                "6愛": ["數 (姚)", "數 (姚)", "中 (梁)", "英 (美)", "技 (馮)", "常 (瑩)", "導 (慧)", "視專 (航)"],
-                "6智": ["圖 (唐)", "體 (耀)", "中 (鄧)", "英 (慧)", "數 (盧)", "數 (盧)", "導 (驥)", "視專 (佳)"]
-            },
-            "Day 3": {
-                "1信": ["數 (梅)", "數 (梅)", "中 (佳)", "技 (唐)", "英 (琦)", "英 (琦)", "導 (琦)", "體專 (伍)"],
-                "1望": ["技 (瑩)", "中 (瑩)", "數 (敏)", "數 (敏)", "英 (芷)", "英 (芷)", "導 (梅)", "體專 (盧)"],
-                "2信": ["視 (航)", "數 (盧)", "英 (紀)", "英 (紀)", "中 (婷)", "聖 (驥)", "導 (慧)", "視專 (驥)"],
-                "2望": ["英 (美)", "英 (美)", "常 (伍)", "常 (伍)", "中 (梁)", "數 (姚)", "導 (姚)", "視專 (佩)"],
-                "3信": ["英 (玲)", "英 (玲)", "數 (申)", "數 (申)", "技 (兹)", "中 (曾)", "常 (紀)", "鞏固英 (玲)"],
-                "3望": ["中 (潤)", "視 (驥)", "數 (華)", "數 (華)", "英 (徐)", "英 (徐)", "常 (彥)", "鞏固英 (徐)"],
-                "4信": ["數 (李)", "圖 (唐)", "中 (吳)", "中 (吳)", "英 (儀)", "英 (儀)", "體 (耀)", "音專 (華)"],
-                "4望": ["圖 (唐)", "數 (嚴)", "中 (露)", "中 (露)", "英 (紀)", "英 (紀)", "聖 (嚴)", "音專 (兹)"],
-                "4愛": ["數 (浩)", "體 (浩)", "中 (潤)", "中 (潤)", "英 (慧)", "英 (慧)", "科 (航)", "音專 (唐)"],
-                "4智": ["科 (羅)", "技 (陳)", "中 (曾)", "中 (曾)", "英 (玲)", "英 (玲)", "數 (佩)", "音專 (美)"],
-                "5信": ["中 (婷)", "英 (芷)", "數 (佩)", "數 (佩)", "常 (華)", "常 (華)", "導 (浩)", "鞏固中 (婷)"],
-                "5望": ["中 (耀)", "英 (儀)", "常 (陳)", "常 (陳)", "數 (馮)", "數 (馮)", "音 (美)", "鞏固中 (耀)"],
-                "5愛": ["中 (陳)", "英 (彥)", "常 (廖)", "常 (廖)", "數 (敏)", "數 (敏)", "普 (潤)", "鞏固中 (陳)"],
-                "5智": ["中 (鄺)", "英 (琦)", "數 (燊)", "數 (燊)", "常 (申)", "常 (申)", "圖 (唐)", "鞏固中 (鄺)"],
-                "6信": ["中 (露)", "中 (露)", "英 (徐)", "普 (徐)", "數 (伍)", "聖 (吳)", "體 (伍)", "鞏固中 (露)"],
-                "6望": ["中 (佳)", "中 (佳)", "英 (驥)", "數 (兹)", "聖 (浩)", "音 (兹)", "常 (兹)", "鞏固中 (佳)"],
-                "6愛": ["中 (梁)", "中 (梁)", "英 (美)", "數 (姚)", "常 (瑩)", "常 (瑩)", "普 (吳)", "鞏固中 (梁)"],
-                "6智": ["中 (鄧)", "中 (鄧)", "英 (慧)", "數 (盧)", "常 (燊)", "常 (燊)", "普 (鄧)", "鞏固中 (鄧)"]
-            },
-            "Day 4": {
-                "1信": ["英 (琦)", "數 (梅)", "聖 (華)", "體 (伍)", "中 (佳)", "中 (佳)", "圖 (唐)", "導 (梅)"],
-                "1望": ["科 (鄺)", "科 (鄺)", "中 (瑩)", "中 (瑩)", "英 (芷)", "數 (敏)", "普 (徐)", "導 (唐)"],
-                "2信": ["常 (梅)", "數 (盧)", "中 (婷)", "中 (婷)", "英ST (紀)", "英ST (紀)", "音 (美)", "導 (慧)"],
-                "2望": ["英ST (美)", "英ST (美)", "數 (姚)", "音 (華)", "中 (梁)", "中 (梁)", "視 (梅)", "導 (姚)"],
-                "3信": ["英 (玲)", "視 (敏)", "中 (曾)", "中 (曾)", "音 (申)", "數 (申)", "常 (紀)", "音專 (兹)"],
-                "3望": ["數 (華)", "體 (耀)", "英ST (徐)", "英ST (徐)", "中 (潤)", "中 (潤)", "常 (彥)", "音專 (華)"],
-                "4信": ["中 (吳)", "英 (儀)", "數 (李)", "數 (李)", "人 (廖)", "人 (廖)", "聖 (浩)", "視專 (敏)"],
-                "4望": ["中 (露)", "英 (紀)", "數 (嚴)", "數 (嚴)", "人 (瑩)", "人 (瑩)", "體 (露)", "視專 (嚴)"],
-                "4愛": ["中 (潤)", "英 (慧)", "科 (航)", "科 (航)", "數 (浩)", "數 (浩)", "音 (申)", "視專 (佩)"],
-                "4智": ["中 (曾)", "英 (玲)", "數 (佩)", "數 (佩)", "科 (羅)", "科 (羅)", "普 (潤)", "視專 (佳)"],
-                "5信": ["技 (馮)", "數 (佩)", "英 (芷)", "英 (芷)", "中 (婷)", "中 (婷)", "常 (華)", "鞏固英 (芷)"],
-                "5望": ["圖 (唐)", "數 (馮)", "英 (儀)", "英 (儀)", "中 (耀)", "中 (耀)", "普 (鄺)", "鞏固英 (儀)"],
-                "5愛": ["數 (敏)", "體 (浩)", "英 (彥)", "英 (彥)", "中 (陳)", "中 (陳)", "常 (廖)", "鞏固英 (彥)"],
-                "5智": ["數 (燊)", "視 (廖)", "英 (琦)", "英 (琦)", "中 (鄺)", "中 (鄺)", "導 (耀)", "鞏固英 (琦)"],
-                "6信": ["音 (申)", "數 (伍)", "中 (露)", "中 (露)", "英 (徐)", "英 (徐)", "常 (航)", "體專 (伍)"],
-                "6望": ["數 (兹)", "技 (航)", "中 (佳)", "中 (佳)", "英 (驥)", "英 (驥)", "常 (兹)", "體專 (浩)"],
-                "6愛": ["數 (姚)", "視 (驥)", "中 (梁)", "中 (梁)", "英 (美)", "英 (美)", "常 (瑩)", "體專 (露)"],
-                "6智": ["數 (盧)", "音 (申)", "中 (鄧)", "中 (鄧)", "英 (慧)", "英 (慧)", "常 (燊)", "體專 (耀)"]
-            },
-            "Day 5": {
-                "1信": ["英 (琦)", "科 (馮)", "中 (佳)", "中 (佳)", "人 (廖)", "數 (梅)", "導 (梅)", "視專 (梅)"],
-                "1望": ["英 (芷)", "數 (敏)", "中 (瑩)", "中 (瑩)", "視 (敏)", "人 (瑩)", "導 (芷)", "視專 (航)"],
-                "2信": ["數 (盧)", "數 (盧)", "英 (紀)", "常 (梅)", "中 (婷)", "中 (婷)", "導 (兹)", "體專 (盧)"],
-                "2望": ["英ST (美)", "英ST (美)", "數 (姚)", "數 (姚)", "中 (梁)", "中 (梁)", "導 (伍)", "體專 (露)"],
-                "3信": ["中 (曾)", "中 (曾)", "英ST (玲)", "英ST (玲)", "常 (紀)", "數 (申)", "普 (婷)", "鞏固中 (曾)"],
-                "3望": ["中 (潤)", "中 (潤)", "圖 (唐)", "聖 (華)", "英ST (徐)", "英ST (徐)", "數 (華)", "鞏固中 (潤)"],
-                "4信": ["英 (儀)", "英 (儀)", "中 (吳)", "中 (吳)", "科 (馮)", "數 (李)", "音 (申)", "鞏固數 (李)"],
-                "4望": ["英 (紀)", "英 (紀)", "中 (露)", "中 (露)", "科 (鄧)", "科 (鄧)", "數 (嚴)", "鞏固數 (嚴)"],
-                "4愛": ["英 (慧)", "英 (慧)", "中 (潤)", "中 (潤)", "數 (浩)", "聖 (浩)", "科 (航)", "鞏固數 (浩)"],
-                "4智": ["英 (玲)", "英 (玲)", "中 (曾)", "中 (曾)", "視 (梅)", "數 (佩)", "聖 (驥)", "鞏固數 (佩)"],
-                "5信": ["數 (佩)", "聖 (浩)", "中 (婷)", "中 (婷)", "英 (芷)", "圖 (唐)", "導 (浩)", "音專 (兹)"],
-                "5望": ["數 (馮)", "技 (陳)", "中 (耀)", "中 (耀)", "英 (儀)", "常 (陳)", "導 (佩)", "音專 (姚)"],
-                "5愛": ["數 (敏)", "音 (兹)", "中 (陳)", "中 (陳)", "英 (彥)", "常 (廖)", "導 (琦)", "音專 (唐)"],
-                "5智": ["常 (申)", "體 (耀)", "中 (鄺)", "中 (鄺)", "英 (琦)", "數 (燊)", "導 (耀)", "音專 (申)"],
-                "6信": ["中 (露)", "中 (露)", "英 (徐)", "英 (徐)", "數 (伍)", "技 (航)", "視 (敏)", "鞏固英 (徐)"],
-                "6望": ["中 (佳)", "中 (佳)", "英 (驥)", "英 (驥)", "常 (兹)", "數 (兹)", "圖 (唐)", "鞏固英 (驥)"],
-                "6愛": ["中 (梁)", "中 (梁)", "英 (美)", "英 (美)", "聖 (驥)", "數 (姚)", "常 (瑩)", "鞏固英 (美)"],
-                "6智": ["中 (鄧)", "中 (鄧)", "英 (慧)", "英 (慧)", "常 (燊)", "數 (盧)", "視 (廖)", "鞏固英 (慧)"]
-            },
-            "Day 6": {
-                "1信": ["中 (佳)", "普 (廖)", "數 (梅)", "英 (琦)", "成長 (梅)", "成長 (梅)", "視 (廖)", "導 (琦)"],
-                "1望": ["英 (芷)", "數 (敏)", "中 (瑩)", "圖 (唐)", "成長 (芷)", "成長 (芷)", "聖 (華)", "導 (瑩)"],
-                "2信": ["數 (盧)", "圖 (唐)", "英 (紀)", "中 (婷)", "成長 (盧)", "成長 (盧)", "普 (潤)", "導 (慧)"],
-                "2望": ["中 (梁)", "英 (美)", "聖 (浩)", "普 (廖)", "成長 (梁)", "成長 (梁)", "數 (姚)", "導 (兹)"],
-                "3信": ["英 (玲)", "體 (浩)", "數 (申)", "中 (曾)", "成長 (申)", "成長 (申)", "導 (浩)", "視專 (梅)"],
-                "3望": ["數 (華)", "技 (陳)", "英 (徐)", "中 (潤)", "成長 (華)", "成長 (華)", "導 (盧)", "視專 (嚴)"],
-                "4信": ["數 (李)", "視 (驥)", "中 (吳)", "英 (儀)", "成長 (紀)", "成長 (紀)", "技 (馮)", "體專 (耀)"],
-                "4望": ["技 (鄧)", "數 (嚴)", "中 (露)", "英 (紀)", "成長 (潤)", "成長 (潤)", "科 (鄧)", "體專 (露)"],
-                "4愛": ["數 (浩)", "普 (徐)", "中 (潤)", "英 (慧)", "成長 (慧)", "成長 (慧)", "圖 (唐)", "體專 (浩)"],
-                "4智": ["科 (羅)", "音 (兹)", "中 (曾)", "英 (玲)", "成長 (曾)", "成長 (曾)", "數 (佩)", "體專 (伍)"],
-                "5信": ["中 (婷)", "英 (芷)", "常 (華)", "數 (佩)", "成長 (婷)", "成長 (婷)", "視 (航)", "鞏固數 (佩)"],
-                "5望": ["中 (耀)", "英 (儀)", "視 (驥)", "數 (馮)", "成長 (陳)", "成長 (陳)", "導 (琦)", "鞏固數 (馮)"],
-                "5愛": ["中 (陳)", "英 (彥)", "數 (敏)", "技 (航)", "成長 (敏)", "成長 (敏)", "導 (梅)", "鞏固數 (敏)"],
-                "5智": ["中 (鄺)", "英 (琦)", "技 (馮)", "數 (燊)", "成長 (耀)", "成長 (耀)", "常 (申)", "鞏固數 (燊)"],
-                "6信": ["英 (徐)", "中 (露)", "常 (航)", "數 (伍)", "成長 (伍)", "成長 (伍)", "導 (伍)", "音專 (申)"],
-                "6望": ["英 (驥)", "中 (佳)", "普 (廖)", "數 (兹)", "成長 (佳)", "成長 (佳)", "導 (佳)", "音專 (姚)"],
-                "6愛": ["英 (美)", "中 (梁)", "圖 (唐)", "數 (姚)", "成長 (美)", "成長 (美)", "導 (兹)", "音專 (唐)"],
-                "6智": ["英 (慧)", "中 (鄧)", "數 (盧)", "聖 (吳)", "成長 (鄧)", "成長 (鄧)", "導 (瑩)", "音專 (美)"]
-            }
-        };
+        let scheduleData = {};
 
         // --- State ---
-        let selectedDay = "Day 1";
+        let teacherScheduleData = {};
+        let periodTimes = [];
+        let schoolYear = "";
+        let selectedDay = "星期一";
         let searchMode = "class"; // 'class' or 'teacher'
         let selectedClass = "1信";
         let selectedTeacher = "";
         let teacherOptions = [];
 
         // --- Utils ---
-        const days = Object.keys(scheduleData);
-        const classList = Object.keys(scheduleData["Day 1"]);
+        let days = [];
+        let classList = [];
 
         const extractTeacher = (str) => {
             const match = str.match(/\((.*?)\)/);
@@ -272,6 +155,13 @@
 
         // Initialize Teacher Options
         const initTeachers = () => {
+            const currentTeacherCodes = Object.keys(teacherScheduleData);
+            if (currentTeacherCodes.length > 0) {
+                teacherOptions = currentTeacherCodes.sort((a, b) => a.localeCompare(b, 'zh-HK'));
+                selectedTeacher = teacherOptions[0];
+                return;
+            }
+
             const teachers = new Set();
             Object.values(scheduleData).forEach(dayData => {
                 Object.values(dayData).forEach(periods => {
@@ -295,7 +185,7 @@
             days.forEach(day => {
                 const btn = document.createElement('button');
                 btn.textContent = day;
-                btn.className = `py-2 px-1 rounded-lg text-sm font-medium transition-colors ${
+                btn.className = `py-2 px-1 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
                     selectedDay === day 
                     ? 'bg-emerald-600 text-white shadow-md' 
                     : 'bg-white text-gray-600 border border-gray-200 hover:bg-emerald-50'
@@ -363,7 +253,7 @@
             const list = document.getElementById('class-schedule-list');
             list.innerHTML = '';
 
-            const schedule = scheduleData[selectedDay][selectedClass] || [];
+            const schedule = scheduleData[selectedDay]?.[selectedClass] || [];
 
             schedule.forEach((subject, idx) => {
                 const div = document.createElement('div');
@@ -373,7 +263,7 @@
                         ${idx + 1}
                     </div>
                     <div>
-                        <div class="text-gray-500 text-xs uppercase tracking-wide">第 ${idx + 1} 節</div>
+                        <div class="text-gray-500 text-xs uppercase tracking-wide">第 ${idx + 1} 節${periodTimes[idx] ? ` · ${periodTimes[idx]}` : ''}</div>
                         <div class="text-gray-900 font-medium text-lg">${subject}</div>
                     </div>
                 `;
@@ -383,28 +273,40 @@
 
         const renderTeacherSchedule = () => {
             const title = document.getElementById('teacher-view-title');
-            title.textContent = `${selectedDay} - ${selectedTeacher}老師 任教節數`;
+            title.textContent = `${selectedDay} - ${selectedTeacher}老師任教課節`;
 
             const list = document.getElementById('teacher-schedule-list');
             list.innerHTML = '';
 
-            // Logic to find teacher's schedule
             const result = [];
-            const dayData = scheduleData[selectedDay];
-            
-            Object.keys(dayData).forEach(className => {
-                const periods = dayData[className];
-                periods.forEach((subjectStr, index) => {
-                    const teacher = extractTeacher(subjectStr);
-                    if (teacher === selectedTeacher) {
+            const teacherDayData = teacherScheduleData[selectedTeacher]?.[selectedDay];
+
+            if (teacherDayData) {
+                Object.entries(teacherDayData).forEach(([period, entries]) => {
+                    entries.forEach(entry => {
                         result.push({
-                            period: index + 1,
-                            className: className,
-                            subject: subjectStr
+                            period: Number(period),
+                            className: entry.className,
+                            subject: entry.subject
                         });
-                    }
+                    });
                 });
-            });
+            } else {
+                const dayData = scheduleData[selectedDay] || {};
+                Object.keys(dayData).forEach(className => {
+                    const periods = dayData[className];
+                    periods.forEach((subjectStr, index) => {
+                        const teacher = extractTeacher(subjectStr);
+                        if (teacher === selectedTeacher) {
+                            result.push({
+                                period: index + 1,
+                                className: className,
+                                subject: subjectStr
+                            });
+                        }
+                    });
+                });
+            }
             
             result.sort((a, b) => a.period - b.period);
 
@@ -425,12 +327,12 @@
                                 ${item.period}
                             </div>
                             <div>
-                                <div class="text-gray-900 font-bold">${item.className}班</div>
+                                <div class="text-gray-900 font-bold">${/^[1-6][信望愛智]$/.test(item.className) ? `${item.className}班` : item.className}</div>
                                 <div class="text-gray-500 text-sm">${item.subject}</div>
                             </div>
                         </div>
                         <div class="px-3 py-1 bg-gray-100 text-gray-600 text-xs rounded-full font-medium">
-                            第 ${item.period} 節
+                            第 ${item.period} 節${periodTimes[item.period - 1] ? `<br><span class="text-[10px]">${periodTimes[item.period - 1]}</span>` : ''}
                         </div>
                     `;
                     list.appendChild(div);
@@ -468,7 +370,34 @@
         };
 
         // --- Init ---
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch('./schedule-data.json', { cache: 'no-cache' });
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const timetableData = await response.json();
+                scheduleData = timetableData.scheduleData;
+                teacherScheduleData = timetableData.teacherScheduleData || {};
+                periodTimes = timetableData.periodTimes || [];
+                schoolYear = timetableData.schoolYear || '';
+                days = timetableData.days || Object.keys(scheduleData);
+                classList = timetableData.classNames || Object.keys(scheduleData[days[0]]);
+                selectedDay = days[0];
+                selectedClass = classList[0];
+                if (schoolYear) {
+                    document.getElementById('data-source-label').textContent = `資料來源：${schoolYear} 學生及教師時間表`;
+                }
+            } catch (error) {
+                console.error('未能載入最新課表資料：', error);
+                document.getElementById('data-source-label').textContent = '未能載入 2026–2027 課表資料，請重新整理';
+                document.getElementById('content-area').innerHTML = `
+                    <div class="text-center py-12 px-4 bg-red-50 border border-red-100 rounded-lg">
+                        <p class="font-semibold text-red-700">未能載入最新課表資料</p>
+                        <p class="mt-2 text-sm text-red-600">請重新整理頁面；如問題持續，請聯絡管理員。</p>
+                    </div>
+                `;
+                return;
+            }
+
             initTeachers();
             renderClassOptions();
             renderTeacherOptions();
